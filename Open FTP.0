@@ -1,0 +1,142 @@
+import tkinter as tk
+from tkinter import filedialog
+from tkinter import messagebox
+from ftplib import FTP
+
+def send_file():
+    """
+    Retrieves input values from the GUI, connects to the FTP server,
+    and sends the selected file to the specified Cisco device.
+    """
+    ftp_server = server_entry.get()
+    ftp_username = username_entry.get()
+    ftp_password = password_entry.get()
+    remote_file = file_entry.get()
+
+    try:
+        with FTP(ftp_server) as ftp:
+            ftp.login(ftp_username, ftp_password)
+            with open(file_path, 'rb') as file:
+                ftp.storbinary(f'STOR {remote_file}', file)
+            result_label.config(text=f"File sent to {ftp_server} as {remote_file}")
+    except Exception as e:
+        result_label.config(text=f"Error: {e}")
+
+def browse_file():
+    """
+    Opens a file dialog to select a file and updates the file path entry.
+    """
+    global file_path
+    file_path = filedialog.askopenfilename()
+    file_entry.delete(0, tk.END)
+    file_entry.insert(0, file_path)
+
+# Create the main window
+window = tk.Tk()
+window.title("Cisco File Transfer")
+window.geometry("450x130")
+window['background']='#222021'
+
+# MENU BAR
+menubar = tk.Menu(window)
+
+def new_file():
+    """Handle the New File action."""
+    print("Create a new file")
+
+def open_file():
+    """Handle the Open File action."""
+    print("Open an existing file")
+
+# Create the File menu with a submenu
+file_menu = tk.Menu(menubar, tearoff=0)
+file_menu.add_command(label="New", command=new_file)
+file_menu.add_command(label="Open", command=open_file)
+file_menu.add_separator()
+
+def export_pdf():
+    """Handle exporting as PDF."""
+    print("File exported as PDF")
+
+def export_csv():
+    """Handle exporting as CSV."""
+    print("File exported as CSV")
+
+# Create the Export submenu
+export_submenu = tk.Menu(file_menu, tearoff=0)
+export_submenu.add_command(label="Export as PDF", command=export_pdf)
+export_submenu.add_command(label="Export as CSV", command=export_csv)
+file_menu.add_cascade(label="Export", menu=export_submenu)
+
+file_menu.add_separator()
+file_menu.add_command(label="Exit", command=window.quit)
+menubar.add_cascade(label="File", menu=file_menu)
+
+# Options Menu
+def apperance_file():
+    messagebox.showinfo("Apperance Options", "Coming Soon. . .")
+
+def color_file():
+    messagebox.showinfo("Color Options", "Coming Soon...")
+
+# Create the Options menu
+options_menu = tk.Menu(menubar, tearoff=0)
+options_menu.add_command(label="Apperance", command=apperance_file)
+options_menu.add_command(label="Colors", command=color_file)
+menubar.add_cascade(label="Options", menu=options_menu)
+
+
+#Help Menu
+def doc_file():
+    messagebox.showinfo("Open FTP Documentation", "I swear ill write things down")
+
+def about_file():
+    messagebox.showinfo("Open File", "An open source tool for File Transfer Protocol designed by one person")
+
+# Create the Help menu
+help_menu = tk.Menu(menubar, tearoff=0)
+help_menu.add_command(label="Documentation", command=doc_file)
+help_menu.add_separator()
+help_menu.add_command(label="About Open FTP", command=about_file)
+menubar.add_cascade(label="Help", menu=help_menu)
+
+
+# Configure the menu bar
+window.config(menu=menubar)
+
+
+
+#FTP SERVER INPUTS
+# Server details
+server_label = tk.Label(window, background= '#222021', foreground= 'white', text="Server IP:")
+server_label.grid(row=0, column=0)
+server_entry = tk.Entry(window, background= '#808588', width= '50')
+server_entry.grid(row=0, column=1)
+
+username_label = tk.Label(window, background= '#222021', foreground= 'white', text="Username:")
+username_label.grid(row=1, column=0)
+username_entry = tk.Entry(window, bg= '#808588', width= '50')
+username_entry.grid(row=1, column=1)
+
+password_label = tk.Label(window, background= '#222021', foreground= 'white', text="Password:")
+password_label.grid(row=2, column=0)
+password_entry = tk.Entry(window, bg= '#808588', width= '50', show="*")  # Hide password input
+password_entry.grid(row=2, column=1)
+
+# File selection
+file_label = tk.Label(window, background= '#222021', foreground= 'white',  text="File:")
+file_label.grid(row=3, column=0)
+file_entry = tk.Entry(window, bg= '#808588', width= '50')
+file_entry.grid(row=3, column=1)
+browse_button = tk.Button(window, background= '#808588',  text="Browse", command=browse_file)
+browse_button.grid(row=3, column=2)
+
+# Send button
+send_button = tk.Button(window, background= '#808588', width= '15', height= '2',  text="Send File", command=send_file)
+send_button.grid(row=4, column=1)
+
+# Result label
+result_label = tk.Label(window, text="")
+result_label.grid(row=5, column=0, columnspan=2)
+
+window.mainloop()
