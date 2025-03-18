@@ -2,6 +2,11 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 from ftplib import FTP
+import webbrowser
+import os
+from tkinter import *
+
+
 
 def send_file():
     """
@@ -79,23 +84,27 @@ def apperance_file():
 def color_file():
     messagebox.showinfo("Color Options", "Coming Soon...")
 
+def open_file():
+    os.system('"D:\Desktop Folder\Python Scripts\Apperance FTP Page.py"')
+
+
 # Create the Options menu
 options_menu = tk.Menu(menubar, tearoff=0)
-options_menu.add_command(label="Apperance", command=apperance_file)
+options_menu.add_command(label="Apperance", command=open_file)
 options_menu.add_command(label="Colors", command=color_file)
 menubar.add_cascade(label="Options", menu=options_menu)
 
 
 #Help Menu
-def doc_file():
-    messagebox.showinfo("Open FTP Documentation", "I swear ill write things down")
-
 def about_file():
-    messagebox.showinfo("Open File", "An open source tool for File Transfer Protocol designed by one person")
+    messagebox.showinfo("Open File", "An open source tool for File Transfer Protocol designed by one")
+
+def open_link():
+    webbrowser.open("https://github.com/DasaniBottled/Open-FTP.git")
 
 # Create the Help menu
 help_menu = tk.Menu(menubar, tearoff=0)
-help_menu.add_command(label="Documentation", command=doc_file)
+help_menu.add_command(label="Documentation", command=open_link)
 help_menu.add_separator()
 help_menu.add_command(label="About Open FTP", command=about_file)
 menubar.add_cascade(label="Help", menu=help_menu)
